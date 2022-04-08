@@ -213,7 +213,7 @@ bool TestSettings()
 
 #ifdef CRYPTOPP_ALLOW_UNALIGNED_DATA_ACCESS
 	// Don't CRYPTOPP_ASSERT the alignment of testvals. That's what this test is for.
-	byte testvals[10] = {1,2,2,3,3,3,3,2,2,1};
+	CryptoPP::byte testvals[10] = {1,2,2,3,3,3,3,2,2,1};
 	if (*(word32 *)(void *)(testvals+3) == 0x03030303 && *(word64 *)(void *)(testvals+1) == W64LIT(0x0202030303030202))
 		cout << "passed:  Your machine allows unaligned data access.\n";
 	else
@@ -225,14 +225,14 @@ bool TestSettings()
 	cout << "passed:  CRYPTOPP_ALLOW_UNALIGNED_DATA_ACCESS is not defined. Will restrict to aligned data access.\n";
 #endif
 
-	if (sizeof(byte) == 1)
+	if (sizeof(CryptoPP::byte) == 1)
 		cout << "passed:  ";
 	else
 	{
 		cout << "FAILED:  ";
 		pass = false;
 	}
-	cout << "sizeof(byte) == " << sizeof(byte) << endl;
+	cout << "sizeof(CryptoPP::byte) == " << sizeof(CryptoPP::byte) << endl;
 
 	if (sizeof(word16) == 2)
 		cout << "passed:  ";
@@ -352,7 +352,7 @@ bool TestSecBlock()
 			cout << "FAILED:";
 		else
 			cout << "passed:";
-		cout << "  Zeroized byte array" << endl;
+		cout << "  Zeroized CryptoPP::byte array" << endl;
 
 		SecBlock<word32> z2(NULL, 256);
 		temp = true;
@@ -403,16 +403,16 @@ bool TestSecBlock()
 		SecByteBlock a, b;
 		temp = true;
 
-		a.Assign((const byte*)"a", 1);
-		b.Assign((const byte*)"b", 1);
+		a.Assign((const CryptoPP::byte*)"a", 1);
+		b.Assign((const CryptoPP::byte*)"b", 1);
 
 		temp &= (a.SizeInBytes() == 1);
 		temp &= (b.SizeInBytes() == 1);
 		temp &= (a[0] == 'a');
 		temp &= (b[0] == 'b');
 
-		a.Assign((const byte*)"ab", 2);
-		b.Assign((const byte*)"cd", 2);
+		a.Assign((const CryptoPP::byte*)"ab", 2);
+		b.Assign((const CryptoPP::byte*)"cd", 2);
 
 		temp &= (a.SizeInBytes() == 2);
 		temp &= (b.SizeInBytes() == 2);
@@ -429,7 +429,7 @@ bool TestSecBlock()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  Assign byte" << endl;
+	cout << "  Assign CryptoPP::byte" << endl;
 
 	try
 	{
@@ -545,27 +545,27 @@ bool TestSecBlock()
 		SecByteBlock a, b;
 		temp = true;
 
-		a.Assign((const byte*)"a", 1);
-		b.Assign((const byte*)"b", 1);
+		a.Assign((const CryptoPP::byte*)"a", 1);
+		b.Assign((const CryptoPP::byte*)"b", 1);
 
 		a += b;
 		temp &= (a.SizeInBytes() == 2);
 		temp &= (a[0] == 'a' && a[1] == 'b');
 
-		a.Assign((const byte*)"ab", 2);
-		b.Assign((const byte*)"cd", 2);
+		a.Assign((const CryptoPP::byte*)"ab", 2);
+		b.Assign((const CryptoPP::byte*)"cd", 2);
 
 		a += b;
 		temp &= (a.SizeInBytes() == 4);
 		temp &= (a[0] == 'a' && a[1] == 'b' && a[2] == 'c' && a[3] == 'd');
 
-		a.Assign((const byte*)"a", 1);
+		a.Assign((const CryptoPP::byte*)"a", 1);
 
 		a += a;
 		temp &= (a.SizeInBytes() == 2);
 		temp &= (a[0] == 'a' && a[1] == 'a');
 
-		a.Assign((const byte*)"ab", 2);
+		a.Assign((const CryptoPP::byte*)"ab", 2);
 
 		a += a;
 		temp &= (a.SizeInBytes() == 4);
@@ -581,7 +581,7 @@ bool TestSecBlock()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  Append byte" << endl;
+	cout << "  Append CryptoPP::byte" << endl;
 
 	try
 	{
@@ -722,14 +722,14 @@ bool TestSecBlock()
 
 	//********** Concatenate **********//
 
-	// byte
+	// CryptoPP::byte
 	try
 	{
 		SecByteBlock a, b, c;
 		temp = true;
 
-		a.Assign((const byte*)"a", 1);
-		b.Assign((const byte*)"b", 1);
+		a.Assign((const CryptoPP::byte*)"a", 1);
+		b.Assign((const CryptoPP::byte*)"b", 1);
 
 		c = a + b;
 		temp &= (a[0] == 'a');
@@ -737,8 +737,8 @@ bool TestSecBlock()
 		temp &= (c.SizeInBytes() == 2);
 		temp &= (c[0] == 'a' && c[1] == 'b');
 
-		a.Assign((const byte*)"ab", 2);
-		b.Assign((const byte*)"cd", 2);
+		a.Assign((const CryptoPP::byte*)"ab", 2);
+		b.Assign((const CryptoPP::byte*)"cd", 2);
 
 		c = a + b;
 		temp &= (a[0] == 'a' && a[1] == 'b');
@@ -756,7 +756,7 @@ bool TestSecBlock()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  Concatenate byte" << endl;
+	cout << "  Concatenate CryptoPP::byte" << endl;
 
 	// word32
 	try
@@ -875,12 +875,12 @@ bool TestSecBlock()
 
 	//********** Equality **********//
 
-	// byte
+	// CryptoPP::byte
 	try
 	{
-		static const byte str1[] = "abcdefghijklmnopqrstuvwxyz";
-		static const byte str2[] = "zyxwvutsrqponmlkjihgfedcba";
-		static const byte str3[] = "0123456789";
+		static const CryptoPP::byte str1[] = "abcdefghijklmnopqrstuvwxyz";
+		static const CryptoPP::byte str2[] = "zyxwvutsrqponmlkjihgfedcba";
+		static const CryptoPP::byte str3[] = "0123456789";
 
 		temp = true;
 		SecByteBlock a,b;
@@ -911,7 +911,7 @@ bool TestSecBlock()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  Equality byte" << endl;
+	cout << "  Equality CryptoPP::byte" << endl;
 
 	// word32
 	try
@@ -1107,11 +1107,11 @@ bool TestSecBlock()
 
 	//********** FixedSizeAllocatorWithCleanup and Grow **********//
 
-	// byte
+	// CryptoPP::byte
 	try
 	{
 		static const unsigned int SIZE = 8;
-		SecBlockWithHint<byte, SIZE> block(SIZE);
+		SecBlockWithHint<CryptoPP::byte, SIZE> block(SIZE);
 		memset(block, 0xaa, block.SizeInBytes());
 
 		temp = true;
@@ -1142,7 +1142,7 @@ bool TestSecBlock()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  FixedSizeAllocator Grow with byte" << endl;
+	cout << "  FixedSizeAllocator Grow with CryptoPP::byte" << endl;
 
 	// word32
 	try
@@ -1338,7 +1338,7 @@ bool TestOS_RNG()
 		}
 		else
 			cout << "passed:";
-		cout << "  it took " << long(t1) << " seconds to generate " << total << " bytes" << endl;
+		cout << "  it took " << long(t1) << " seconds to generate " << total << " CryptoPP::bytes" << endl;
 
 #if 0	// disable this part. it's causing an unpredictable pause during the validation testing
 		if (t1 < 2)
@@ -1352,7 +1352,7 @@ bool TestOS_RNG()
 				total += 1;
 			}
 
-			// if it generates too many bytes in a certain amount of time,
+			// if it generates too many CryptoPP::bytes in a certain amount of time,
 			// something's probably wrong
 			t = time(NULL);
 			while (time(NULL) - t < 2)
@@ -1368,7 +1368,7 @@ bool TestOS_RNG()
 			}
 			else
 				cout << "passed:";
-			cout << "  it generated " << length << " bytes in " << long(time(NULL) - t) << " seconds" << endl;
+			cout << "  it generated " << length << " CryptoPP::bytes in " << long(time(NULL) - t) << " seconds" << endl;
 		}
 #endif
 
@@ -1381,7 +1381,7 @@ bool TestOS_RNG()
 		}
 		else
 			cout << "passed:";
-		cout << "  " << total << " generated bytes compressed to " << meter.GetTotalBytes() << " bytes by DEFLATE" << endl;
+		cout << "  " << total << " generated CryptoPP::bytes compressed to " << meter.GetTotalBytes() << " CryptoPP::bytes by DEFLATE" << endl;
 	}
 	else
 		cout << "\nNo operating system provided blocking random number generator, skipping test." << endl;
@@ -1406,7 +1406,7 @@ bool TestOS_RNG()
 		}
 		else
 			cout << "passed:";
-		cout << "  100000 generated bytes compressed to " << meter.GetTotalBytes() << " bytes by DEFLATE" << endl;
+		cout << "  100000 generated CryptoPP::bytes compressed to " << meter.GetTotalBytes() << " CryptoPP::bytes by DEFLATE" << endl;
 	}
 	else
 		cout << "\nNo operating system provided nonblocking random number generator, skipping test." << endl;
@@ -1443,7 +1443,7 @@ bool TestAutoSeeded()
 	}
 	else
 		cout << "passed:";
-	cout << "  100000 generated bytes compressed to " << meter.GetTotalBytes() << " bytes by DEFLATE" << endl;
+	cout << "  100000 generated CryptoPP::bytes compressed to " << meter.GetTotalBytes() << " CryptoPP::bytes by DEFLATE" << endl;
 
 	try
 	{
@@ -1458,7 +1458,7 @@ bool TestAutoSeeded()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  discarded 10000 bytes" << endl;
+	cout << "  discarded 10000 CryptoPP::bytes" << endl;
 
 	try
 	{
@@ -1483,7 +1483,7 @@ bool TestAutoSeeded()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  IncorporateEntropy with " << 4*ENTROPY_SIZE << " bytes" << endl;
+	cout << "  IncorporateEntropy with " << 4*ENTROPY_SIZE << " CryptoPP::bytes" << endl;
 
 	return generate && discard && incorporate;
 }
@@ -1507,7 +1507,7 @@ bool TestAutoSeededX917()
 	}
 	else
 		cout << "passed:";
-	cout << "  100000 generated bytes compressed to " << meter.GetTotalBytes() << " bytes by DEFLATE" << endl;
+	cout << "  100000 generated CryptoPP::bytes compressed to " << meter.GetTotalBytes() << " CryptoPP::bytes by DEFLATE" << endl;
 
 	try
 	{
@@ -1522,7 +1522,7 @@ bool TestAutoSeededX917()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  discarded 10000 bytes" << endl;
+	cout << "  discarded 10000 CryptoPP::bytes" << endl;
 
 	try
 	{
@@ -1547,7 +1547,7 @@ bool TestAutoSeededX917()
 		cout << "FAILED:";
 	else
 		cout << "passed:";
-	cout << "  IncorporateEntropy with " << 4*ENTROPY_SIZE << " bytes" << endl;
+	cout << "  IncorporateEntropy with " << 4*ENTROPY_SIZE << " CryptoPP::bytes" << endl;
 
 	return generate && discard && incorporate;
 }
@@ -1556,7 +1556,7 @@ bool TestAutoSeededX917()
 #if (CRYPTOPP_BOOL_X86 || CRYPTOPP_BOOL_X32 || CRYPTOPP_BOOL_X64)
 bool TestRDRAND()
 {
-	// Testing on 6th generation i7 shows RDRAND needs less than 8 retries for 10K bytes.
+	// Testing on 6th generation i7 shows RDRAND needs less than 8 retries for 10K CryptoPP::bytes.
 	RDRAND rdrand;
 	bool entropy = true, compress = true, discard = true;
 	static const unsigned int SIZE = 10000;
@@ -1598,7 +1598,7 @@ bool TestRDRAND()
 		}
 		else
 			cout << "passed:";
-		cout << "  " << SIZE << " generated bytes compressed to " << meter.GetTotalBytes() << " bytes by DEFLATE\n";
+		cout << "  " << SIZE << " generated CryptoPP::bytes compressed to " << meter.GetTotalBytes() << " CryptoPP::bytes by DEFLATE\n";
 
 		try
 		{
@@ -1613,7 +1613,7 @@ bool TestRDRAND()
 			cout << "FAILED:";
 		else
 			cout << "passed:";
-		cout << "  discarded " << SIZE << " bytes\n";
+		cout << "  discarded " << SIZE << " CryptoPP::bytes\n";
 	}
 	else
 		cout << "\nRDRAND generator not available, skipping test.\n";
@@ -1634,7 +1634,7 @@ bool TestRDRAND()
 #if (CRYPTOPP_BOOL_X86 || CRYPTOPP_BOOL_X32 || CRYPTOPP_BOOL_X64)
 bool TestRDSEED()
 {
-	// Testing on 5th generation i5 shows RDSEED needs about 128 retries for 10K bytes
+	// Testing on 5th generation i5 shows RDSEED needs about 128 retries for 10K CryptoPP::bytes
 	//  on 64-bit/amd64 VM, and it needs more for an 32-bit/i686 VM.
 	RDSEED rdseed(256);
 	bool entropy = true, compress = true, discard = true;
@@ -1677,7 +1677,7 @@ bool TestRDSEED()
 		}
 		else
 			cout << "passed:";
-		cout << "  " << SIZE << " generated bytes compressed to " << meter.GetTotalBytes() << " bytes by DEFLATE\n";
+		cout << "  " << SIZE << " generated CryptoPP::bytes compressed to " << meter.GetTotalBytes() << " CryptoPP::bytes by DEFLATE\n";
 
 		try
 		{
@@ -1692,7 +1692,7 @@ bool TestRDSEED()
 			cout << "FAILED:";
 		else
 			cout << "passed:";
-		cout << "  discarded " << SIZE << " bytes\n";
+		cout << "  discarded " << SIZE << " CryptoPP::bytes\n";
 	}
 	else
 		cout << "\nRDSEED generator not available, skipping test.\n";
@@ -1719,8 +1719,8 @@ public:
 	virtual unsigned int BlockSize() const =0;
 	virtual unsigned int KeyLength() const =0;
 
-	virtual apbt NewEncryption(const byte *keyStr) const =0;
-	virtual apbt NewDecryption(const byte *keyStr) const =0;
+	virtual apbt NewEncryption(const CryptoPP::byte *keyStr) const =0;
+	virtual apbt NewDecryption(const CryptoPP::byte *keyStr) const =0;
 };
 
 template <class E, class D> class FixedRoundsCipherFactory : public CipherFactory
@@ -1730,9 +1730,9 @@ public:
 	unsigned int BlockSize() const {return E::BLOCKSIZE;}
 	unsigned int KeyLength() const {return m_keylen;}
 
-	apbt NewEncryption(const byte *keyStr) const
+	apbt NewEncryption(const CryptoPP::byte *keyStr) const
 		{return apbt(new E(keyStr, m_keylen));}
-	apbt NewDecryption(const byte *keyStr) const
+	apbt NewDecryption(const CryptoPP::byte *keyStr) const
 		{return apbt(new D(keyStr, m_keylen));}
 
 	unsigned int m_keylen;
@@ -1746,9 +1746,9 @@ public:
 	unsigned int BlockSize() const {return E::BLOCKSIZE;}
 	unsigned int KeyLength() const {return m_keylen;}
 
-	apbt NewEncryption(const byte *keyStr) const
+	apbt NewEncryption(const CryptoPP::byte *keyStr) const
 		{return apbt(new E(keyStr, m_keylen, m_rounds));}
-	apbt NewDecryption(const byte *keyStr) const
+	apbt NewDecryption(const CryptoPP::byte *keyStr) const
 		{return apbt(new D(keyStr, m_keylen, m_rounds));}
 
 	unsigned int m_keylen, m_rounds;
@@ -1791,9 +1791,9 @@ bool BlockTransformationTest(const CipherFactory &cg, BufferedTransformation &va
 class FilterTester : public Unflushable<Sink>
 {
 public:
-	FilterTester(const byte *validOutput, size_t outputLen)
+	FilterTester(const CryptoPP::byte *validOutput, size_t outputLen)
 		: validOutput(validOutput), outputLen(outputLen), counter(0), fail(false) {}
-	void PutByte(byte inByte)
+	void PutByte(CryptoPP::byte inByte)
 	{
 		if (counter >= outputLen || validOutput[counter] != inByte)
 		{
@@ -1803,7 +1803,7 @@ public:
 		}
 		counter++;
 	}
-	size_t Put2(const byte *inString, size_t length, int messageEnd, bool blocking)
+	size_t Put2(const CryptoPP::byte *inString, size_t length, int messageEnd, bool blocking)
 	{
 		CRYPTOPP_UNUSED(messageEnd), CRYPTOPP_UNUSED(blocking);
 
@@ -1824,12 +1824,12 @@ public:
 		return !fail;
 	}
 
-	const byte *validOutput;
+	const CryptoPP::byte *validOutput;
 	size_t outputLen, counter;
 	bool fail;
 };
 
-bool TestFilter(BufferedTransformation &bt, const byte *in, size_t inLen, const byte *out, size_t outLen)
+bool TestFilter(BufferedTransformation &bt, const CryptoPP::byte *in, size_t inLen, const CryptoPP::byte *out, size_t outLen)
 {
 	FilterTester *ft;
 	bt.Attach(ft = new FilterTester(out, outLen));
@@ -1867,8 +1867,8 @@ bool TestModeIV(SymmetricCipher &e, SymmetricCipher &d)
 	SecByteBlock lastIV, iv(e.IVSize());
 	StreamTransformationFilter filter(e, new StreamTransformationFilter(d));
 
-	// vector_ptr<byte> due to Enterprise Analysis finding on the stack based array.
-	vector_ptr<byte> plaintext(20480);
+	// vector_ptr<CryptoPP::byte> due to Enterprise Analysis finding on the stack based array.
+	vector_ptr<CryptoPP::byte> plaintext(20480);
 
 	for (unsigned int i=1; i<20480; i*=2)
 	{
@@ -1894,9 +1894,9 @@ bool TestModeIV(SymmetricCipher &e, SymmetricCipher &d)
 bool ValidateCipherModes()
 {
 	cout << "\nTesting DES modes...\n\n";
-	const byte key[] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef};
-	const byte iv[] = {0x12,0x34,0x56,0x78,0x90,0xab,0xcd,0xef};
-	const byte plain[] = {	// "Now is the time for all " without tailing 0
+	const CryptoPP::byte key[] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef};
+	const CryptoPP::byte iv[] = {0x12,0x34,0x56,0x78,0x90,0xab,0xcd,0xef};
+	const CryptoPP::byte plain[] = {	// "Now is the time for all " without tailing 0
 		0x4e,0x6f,0x77,0x20,0x69,0x73,0x20,0x74,
 		0x68,0x65,0x20,0x74,0x69,0x6d,0x65,0x20,
 		0x66,0x6f,0x72,0x20,0x61,0x6c,0x6c,0x20};
@@ -1906,7 +1906,7 @@ bool ValidateCipherModes()
 
 	{
 		// from FIPS 81
-		const byte encrypted[] = {
+		const CryptoPP::byte encrypted[] = {
 			0x3f, 0xa4, 0x0e, 0x8a, 0x98, 0x4d, 0x48, 0x15,
 			0x6a, 0x27, 0x17, 0x87, 0xab, 0x88, 0x83, 0xf9,
 			0x89, 0x3d, 0x51, 0xec, 0x4b, 0x56, 0x3b, 0x53};
@@ -1925,7 +1925,7 @@ bool ValidateCipherModes()
 	}
 	{
 		// from FIPS 81
-		const byte encrypted[] = {
+		const CryptoPP::byte encrypted[] = {
 			0xE5, 0xC7, 0xCD, 0xDE, 0x87, 0x2B, 0xF2, 0x7C,
 			0x43, 0xE9, 0x34, 0x00, 0x8C, 0x38, 0x9C, 0x0F,
 			0x68, 0x37, 0x88, 0x49, 0x9A, 0x7C, 0x05, 0xF6};
@@ -1948,8 +1948,8 @@ bool ValidateCipherModes()
 	}
 	{
 		// generated with Crypto++, matches FIPS 81
-		// but has extra 8 bytes as result of padding
-		const byte encrypted[] = {
+		// but has extra 8 CryptoPP::bytes as result of padding
+		const CryptoPP::byte encrypted[] = {
 			0xE5, 0xC7, 0xCD, 0xDE, 0x87, 0x2B, 0xF2, 0x7C,
 			0x43, 0xE9, 0x34, 0x00, 0x8C, 0x38, 0x9C, 0x0F,
 			0x68, 0x37, 0x88, 0x49, 0x9A, 0x7C, 0x05, 0xF6,
@@ -1969,8 +1969,8 @@ bool ValidateCipherModes()
 	}
 	{
 		// generated with Crypto++ 5.2, matches FIPS 81
-		// but has extra 8 bytes as result of padding
-		const byte encrypted[] = {
+		// but has extra 8 CryptoPP::bytes as result of padding
+		const CryptoPP::byte encrypted[] = {
 			0xE5, 0xC7, 0xCD, 0xDE, 0x87, 0x2B, 0xF2, 0x7C,
 			0x43, 0xE9, 0x34, 0x00, 0x8C, 0x38, 0x9C, 0x0F,
 			0x68, 0x37, 0x88, 0x49, 0x9A, 0x7C, 0x05, 0xF6,
@@ -1989,9 +1989,9 @@ bool ValidateCipherModes()
 		cout << (fail ? "FAILED   " : "passed   ") << "CBC decryption with one-and-zeros padding" << endl;
 	}
 	{
-		const byte plain_1[] = {'a', 0, 0, 0, 0, 0, 0, 0};
+		const CryptoPP::byte plain_1[] = {'a', 0, 0, 0, 0, 0, 0, 0};
 		// generated with Crypto++
-		const byte encrypted[] = {
+		const CryptoPP::byte encrypted[] = {
 			0x9B, 0x47, 0x57, 0x59, 0xD6, 0x9C, 0xF6, 0xD0};
 
 		CBC_Mode_ExternalCipher::Encryption modeE(desE, iv);
@@ -2009,7 +2009,7 @@ bool ValidateCipherModes()
 	{
 		// generated with Crypto++, matches FIPS 81
 		// but with last two blocks swapped as result of CTS
-		const byte encrypted[] = {
+		const CryptoPP::byte encrypted[] = {
 			0xE5, 0xC7, 0xCD, 0xDE, 0x87, 0x2B, 0xF2, 0x7C,
 			0x68, 0x37, 0x88, 0x49, 0x9A, 0x7C, 0x05, 0xF6,
 			0x43, 0xE9, 0x34, 0x00, 0x8C, 0x38, 0x9C, 0x0F};
@@ -2032,10 +2032,10 @@ bool ValidateCipherModes()
 	}
 	{
 		// generated with Crypto++
-		const byte decryptionIV[] = {0x4D, 0xD0, 0xAC, 0x8F, 0x47, 0xCF, 0x79, 0xCE};
-		const byte encrypted[] = {0x12, 0x34, 0x56};
+		const CryptoPP::byte decryptionIV[] = {0x4D, 0xD0, 0xAC, 0x8F, 0x47, 0xCF, 0x79, 0xCE};
+		const CryptoPP::byte encrypted[] = {0x12, 0x34, 0x56};
 
-		byte stolenIV[8];
+		CryptoPP::byte stolenIV[8];
 
 		CBC_CTS_Mode_ExternalCipher::Encryption modeE(desE, iv);
 		modeE.SetStolenIV(stolenIV);
@@ -2052,7 +2052,7 @@ bool ValidateCipherModes()
 		cout << (fail ? "FAILED   " : "passed   ") << "CBC decryption with ciphertext and IV stealing" << endl;
 	}
 	{
-		const byte encrypted[] = {	// from FIPS 81
+		const CryptoPP::byte encrypted[] = {	// from FIPS 81
 			0xF3,0x09,0x62,0x49,0xC7,0xF4,0x6E,0x51,
 			0xA6,0x9E,0x83,0x9B,0x1A,0x92,0xF7,0x84,
 			0x03,0x46,0x71,0x33,0x89,0x8E,0xA6,0x22};
@@ -2074,9 +2074,9 @@ bool ValidateCipherModes()
 		cout << (fail ? "FAILED   " : "passed   ") << "CFB mode IV generation" << endl;
 	}
 	{
-		const byte plain_2[] = {	// "Now is the." without tailing 0
+		const CryptoPP::byte plain_2[] = {	// "Now is the." without tailing 0
 			0x4e,0x6f,0x77,0x20,0x69,0x73,0x20,0x74,0x68,0x65};
-		const byte encrypted[] = {	// from FIPS 81
+		const CryptoPP::byte encrypted[] = {	// from FIPS 81
 			0xf3,0x1f,0xda,0x07,0x01,0x14,0x62,0xee,0x18,0x7f};
 
 		CFB_Mode_ExternalCipher::Encryption modeE(desE, iv, 1);
@@ -2096,7 +2096,7 @@ bool ValidateCipherModes()
 		cout << (fail ? "FAILED   " : "passed   ") << "CFB (8-bit feedback) IV generation" << endl;
 	}
 	{
-		const byte encrypted[] = {	// from Eric Young's libdes
+		const CryptoPP::byte encrypted[] = {	// from Eric Young's libdes
 			0xf3,0x09,0x62,0x49,0xc7,0xf4,0x6e,0x51,
 			0x35,0xf2,0x4a,0x24,0x2e,0xeb,0x3d,0x3f,
 			0x3d,0x6d,0x5b,0xe3,0x25,0x5a,0xf8,0xc3};
@@ -2118,7 +2118,7 @@ bool ValidateCipherModes()
 		cout << (fail ? "FAILED   " : "passed   ") << "OFB IV generation" << endl;
 	}
 	{
-		const byte encrypted[] = {	// generated with Crypto++
+		const CryptoPP::byte encrypted[] = {	// generated with Crypto++
 			0xF3, 0x09, 0x62, 0x49, 0xC7, 0xF4, 0x6E, 0x51,
 			0x16, 0x3A, 0x8C, 0xA0, 0xFF, 0xC9, 0x4C, 0x27,
 			0xFA, 0x2F, 0x80, 0xF4, 0x80, 0xB8, 0x6F, 0x75};
@@ -2140,14 +2140,14 @@ bool ValidateCipherModes()
 		cout << (fail ? "FAILED   " : "passed   ") << "Counter Mode IV generation" << endl;
 	}
 	{
-		const byte plain_3[] = {	// "7654321 Now is the time for "
+		const CryptoPP::byte plain_3[] = {	// "7654321 Now is the time for "
 			0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x20,
 			0x4e, 0x6f, 0x77, 0x20, 0x69, 0x73, 0x20, 0x74,
 			0x68, 0x65, 0x20, 0x74, 0x69, 0x6d, 0x65, 0x20,
 			0x66, 0x6f, 0x72, 0x20};
-		const byte mac1[] = {	// from FIPS 113
+		const CryptoPP::byte mac1[] = {	// from FIPS 113
 			0xf1, 0xd3, 0x0f, 0x68, 0x49, 0x31, 0x2c, 0xa4};
-		const byte mac2[] = {	// generated with Crypto++
+		const CryptoPP::byte mac2[] = {	// generated with Crypto++
 			0x35, 0x80, 0xC5, 0xC4, 0x6B, 0x81, 0x24, 0xE2};
 
 		CBC_MAC<DES> cbcmac(key);
@@ -2227,7 +2227,7 @@ bool ValidateRC2()
 
 	while (valdata.MaxRetrievable())
 	{
-		byte keyLen, effectiveLen;
+		CryptoPP::byte keyLen, effectiveLen;
 
 		valdata.Get(keyLen);
 		valdata.Get(effectiveLen);
@@ -2430,7 +2430,7 @@ bool ValidateRC5()
 	cout << "\nRC5 validation suite running...\n\n";
 	bool pass1 = true, pass2 = true;
 
-	RC5Encryption enc;  // 0 to 2040-bits (255-bytes)
+	RC5Encryption enc;  // 0 to 2040-bits (255-CryptoPP::bytes)
 	pass1 = RC5Encryption::DEFAULT_KEYLENGTH ==  16 && pass1;
 	pass1 = enc.StaticGetValidKeyLength(0) == 0 && pass1;
 	pass1 = enc.StaticGetValidKeyLength(254) == 254 && pass1;
@@ -2617,7 +2617,7 @@ bool ValidateBlowfish()
 	cout << "\nBlowfish validation suite running...\n\n";
 	bool pass1 = true, pass2 = true, pass3 = true, fail;
 
-	BlowfishEncryption enc1;	// 32 to 448-bits (4 to 56-bytes)
+	BlowfishEncryption enc1;	// 32 to 448-bits (4 to 56-CryptoPP::bytes)
 	pass1 = enc1.StaticGetValidKeyLength(3) == 4 && pass1;
 	pass1 = enc1.StaticGetValidKeyLength(4) == 4 && pass1;
 	pass1 = enc1.StaticGetValidKeyLength(5) == 5 && pass1;
@@ -2631,7 +2631,7 @@ bool ValidateBlowfish()
 	pass1 = enc1.StaticGetValidKeyLength(64) == 56 && pass1;
 	pass1 = enc1.StaticGetValidKeyLength(128) == 56 && pass1;
 
-	BlowfishDecryption dec1; // 32 to 448-bits (4 to 56-bytes)
+	BlowfishDecryption dec1; // 32 to 448-bits (4 to 56-CryptoPP::bytes)
 	pass2 = dec1.StaticGetValidKeyLength(3) == 4 && pass2;
 	pass2 = dec1.StaticGetValidKeyLength(4) == 4 && pass2;
 	pass2 = dec1.StaticGetValidKeyLength(5) == 5 && pass2;
@@ -2648,17 +2648,17 @@ bool ValidateBlowfish()
 
 	HexEncoder output(new FileSink(cout));
 	const char *key[]={"abcdefghijklmnopqrstuvwxyz", "Who is John Galt?"};
-	byte *plain[]={(byte *)"BLOWFISH", (byte *)"\xfe\xdc\xba\x98\x76\x54\x32\x10"};
-	byte *cipher[]={(byte *)"\x32\x4e\xd0\xfe\xf4\x13\xa2\x03", (byte *)"\xcc\x91\x73\x2b\x80\x22\xf6\x84"};
-	byte out[8], outplain[8];
+	CryptoPP::byte *plain[]={(CryptoPP::byte *)"BLOWFISH", (CryptoPP::byte *)"\xfe\xdc\xba\x98\x76\x54\x32\x10"};
+	CryptoPP::byte *cipher[]={(CryptoPP::byte *)"\x32\x4e\xd0\xfe\xf4\x13\xa2\x03", (CryptoPP::byte *)"\xcc\x91\x73\x2b\x80\x22\xf6\x84"};
+	CryptoPP::byte out[8], outplain[8];
 
 	for (int i=0; i<2; i++)
 	{
-		ECB_Mode<Blowfish>::Encryption enc2((byte *)key[i], strlen(key[i]));
+		ECB_Mode<Blowfish>::Encryption enc2((CryptoPP::byte *)key[i], strlen(key[i]));
 		enc2.ProcessData(out, plain[i], 8);
 		fail = memcmp(out, cipher[i], 8) != 0;
 
-		ECB_Mode<Blowfish>::Decryption dec2((byte *)key[i], strlen(key[i]));
+		ECB_Mode<Blowfish>::Decryption dec2((CryptoPP::byte *)key[i], strlen(key[i]));
 		dec2.ProcessData(outplain, cipher[i], 8);
 		fail = fail || memcmp(outplain, plain[i], 8);
 		pass3 = pass3 && !fail;
@@ -2754,7 +2754,7 @@ bool ValidateCAST()
 	cout << "\nCAST-128 validation suite running...\n\n";
 	bool pass1 = true, pass2 = true, pass3 = true;
 
-	CAST128Encryption enc1;  // 40 to 128-bits (5 to 16-bytes)
+	CAST128Encryption enc1;  // 40 to 128-bits (5 to 16-CryptoPP::bytes)
 	pass1 = CAST128Encryption::DEFAULT_KEYLENGTH ==  16 && pass1;
 	pass1 = enc1.StaticGetValidKeyLength(4) == 5 && pass1;
 	pass1 = enc1.StaticGetValidKeyLength(5) == 5 && pass1;
@@ -2762,7 +2762,7 @@ bool ValidateCAST()
 	pass1 = enc1.StaticGetValidKeyLength(16) == 16 && pass1;
 	pass1 = enc1.StaticGetValidKeyLength(17) == 16 && pass1;
 
-	CAST128Decryption dec1;  // 40 to 128-bits (5 to 16-bytes)
+	CAST128Decryption dec1;  // 40 to 128-bits (5 to 16-CryptoPP::bytes)
 	pass2 = CAST128Decryption::DEFAULT_KEYLENGTH ==  16 && pass2;
 	pass2 = dec1.StaticGetValidKeyLength(4) == 5 && pass2;
 	pass2 = dec1.StaticGetValidKeyLength(5) == 5 && pass2;
@@ -2779,7 +2779,7 @@ bool ValidateCAST()
 	cout << "\nCAST-256 validation suite running...\n\n";
 	bool pass4 = true, pass5 = true, pass6 = true;
 
-	CAST256Encryption enc2;  // 128, 160, 192, 224, or 256-bits (16 to 32-bytes, step 4)
+	CAST256Encryption enc2;  // 128, 160, 192, 224, or 256-bits (16 to 32-CryptoPP::bytes, step 4)
 	pass1 = CAST128Encryption::DEFAULT_KEYLENGTH ==  16 && pass1;
 	pass4 = enc2.StaticGetValidKeyLength(15) == 16 && pass4;
 	pass4 = enc2.StaticGetValidKeyLength(16) == 16 && pass4;
@@ -2791,7 +2791,7 @@ bool ValidateCAST()
 	pass4 = enc2.StaticGetValidKeyLength(32) == 32 && pass4;
 	pass4 = enc2.StaticGetValidKeyLength(33) == 32 && pass4;
 
-	CAST256Decryption dec2;  // 128, 160, 192, 224, or 256-bits (16 to 32-bytes, step 4)
+	CAST256Decryption dec2;  // 128, 160, 192, 224, or 256-bits (16 to 32-CryptoPP::bytes, step 4)
 	pass2 = CAST256Decryption::DEFAULT_KEYLENGTH ==  16 && pass2;
 	pass5 = dec2.StaticGetValidKeyLength(15) == 16 && pass5;
 	pass5 = dec2.StaticGetValidKeyLength(16) == 16 && pass5;
@@ -2858,10 +2858,10 @@ bool ValidateSKIPJACK()
 
 bool ValidateSEAL()
 {
-	static const byte input[] = {0x37,0xa0,0x05,0x95,0x9b,0x84,0xc4,0x9c,0xa4,0xbe,0x1e,0x05,0x06,0x73,0x53,0x0f,0x5f,0xb0,0x97,0xfd,0xf6,0xa1,0x3f,0xbd,0x6c,0x2c,0xde,0xcd,0x81,0xfd,0xee,0x7c};
-	static const byte key[] = {0x67, 0x45, 0x23, 0x01, 0xef, 0xcd, 0xab, 0x89, 0x98, 0xba, 0xdc, 0xfe, 0x10, 0x32, 0x54, 0x76, 0xc3, 0xd2, 0xe1, 0xf0};
-	static const byte iv[] = {0x01, 0x35, 0x77, 0xaf};
-	byte output[32];
+	static const CryptoPP::byte input[] = {0x37,0xa0,0x05,0x95,0x9b,0x84,0xc4,0x9c,0xa4,0xbe,0x1e,0x05,0x06,0x73,0x53,0x0f,0x5f,0xb0,0x97,0xfd,0xf6,0xa1,0x3f,0xbd,0x6c,0x2c,0xde,0xcd,0x81,0xfd,0xee,0x7c};
+	static const CryptoPP::byte key[] = {0x67, 0x45, 0x23, 0x01, 0xef, 0xcd, 0xab, 0x89, 0x98, 0xba, 0xdc, 0xfe, 0x10, 0x32, 0x54, 0x76, 0xc3, 0xd2, 0xe1, 0xf0};
+	static const CryptoPP::byte iv[] = {0x01, 0x35, 0x77, 0xaf};
+	CryptoPP::byte output[32];
 
 	cout << "\nSEAL validation suite running...\n\n";
 
@@ -2887,9 +2887,9 @@ bool ValidateSEAL()
 bool ValidateBaseCode()
 {
 	bool pass = true, fail;
-	byte data[255];
+	CryptoPP::byte data[255];
 	for (unsigned int i=0; i<255; i++)
-		data[i] = byte(i);
+		data[i] = CryptoPP::byte(i);
 	static const char hexEncoded[] =
 "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F2021222324252627"
 "28292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F"
@@ -2918,32 +2918,32 @@ bool ValidateBaseCode()
 
 	cout << "\nBase64, base32 and hex coding validation suite running...\n\n";
 
-	fail = !TestFilter(HexEncoder().Ref(), data, 255, (const byte *)hexEncoded, strlen(hexEncoded));
+	fail = !TestFilter(HexEncoder().Ref(), data, 255, (const CryptoPP::byte *)hexEncoded, strlen(hexEncoded));
 	cout << (fail ? "FAILED    " : "passed    ");
 	cout << "Hex Encoding\n";
 	pass = pass && !fail;
 
-	fail = !TestFilter(HexDecoder().Ref(), (const byte *)hexEncoded, strlen(hexEncoded), data, 255);
+	fail = !TestFilter(HexDecoder().Ref(), (const CryptoPP::byte *)hexEncoded, strlen(hexEncoded), data, 255);
 	cout << (fail ? "FAILED    " : "passed    ");
 	cout << "Hex Decoding\n";
 	pass = pass && !fail;
 
-	fail = !TestFilter(Base32Encoder().Ref(), data, 255, (const byte *)base32Encoded, strlen(base32Encoded));
+	fail = !TestFilter(Base32Encoder().Ref(), data, 255, (const CryptoPP::byte *)base32Encoded, strlen(base32Encoded));
 	cout << (fail ? "FAILED    " : "passed    ");
 	cout << "Base32 Encoding\n";
 	pass = pass && !fail;
 
-	fail = !TestFilter(Base32Decoder().Ref(), (const byte *)base32Encoded, strlen(base32Encoded), data, 255);
+	fail = !TestFilter(Base32Decoder().Ref(), (const CryptoPP::byte *)base32Encoded, strlen(base32Encoded), data, 255);
 	cout << (fail ? "FAILED    " : "passed    ");
 	cout << "Base32 Decoding\n";
 	pass = pass && !fail;
 
-	fail = !TestFilter(Base64Encoder(new HexEncoder).Ref(), data, 255, (const byte *)base64AndHexEncoded, strlen(base64AndHexEncoded));
+	fail = !TestFilter(Base64Encoder(new HexEncoder).Ref(), data, 255, (const CryptoPP::byte *)base64AndHexEncoded, strlen(base64AndHexEncoded));
 	cout << (fail ? "FAILED    " : "passed    ");
 	cout << "Base64 Encoding\n";
 	pass = pass && !fail;
 
-	fail = !TestFilter(HexDecoder(new Base64Decoder).Ref(), (const byte *)base64AndHexEncoded, strlen(base64AndHexEncoded), data, 255);
+	fail = !TestFilter(HexDecoder(new Base64Decoder).Ref(), (const CryptoPP::byte *)base64AndHexEncoded, strlen(base64AndHexEncoded), data, 255);
 	cout << (fail ? "FAILED    " : "passed    ");
 	cout << "Base64 Decoding\n";
 	pass = pass && !fail;
@@ -2956,7 +2956,7 @@ bool ValidateSHACAL2()
 	cout << "\nSHACAL-2 validation suite running...\n\n";
 	bool pass1 = true, pass2 = true, pass3 = true;
 
-	SHACAL2Encryption enc;  // 128 to 512-bits (16 to 64-bytes)
+	SHACAL2Encryption enc;  // 128 to 512-bits (16 to 64-CryptoPP::bytes)
 	pass1 = enc.StaticGetValidKeyLength(8) == 16 && pass1;
 	pass1 = enc.StaticGetValidKeyLength(15) == 16 && pass1;
 	pass1 = enc.StaticGetValidKeyLength(16) == 16 && pass1;
@@ -2966,7 +2966,7 @@ bool ValidateSHACAL2()
 	pass1 = enc.StaticGetValidKeyLength(0) == enc.MinKeyLength() && pass1;
 	pass1 = enc.StaticGetValidKeyLength(SIZE_MAX) == enc.MaxKeyLength() && pass1;
 
-	SHACAL2Decryption dec;  // 128 to 512-bits (16 to 64-bytes)
+	SHACAL2Decryption dec;  // 128 to 512-bits (16 to 64-CryptoPP::bytes)
 	pass2 = dec.StaticGetValidKeyLength(8) == 16 && pass2;
 	pass2 = dec.StaticGetValidKeyLength(15) == 16 && pass2;
 	pass2 = dec.StaticGetValidKeyLength(16) == 16 && pass2;

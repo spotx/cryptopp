@@ -227,10 +227,12 @@ namespace CryptoPP { }
 #	define __USE_W32_SOCKETS
 #endif
 
-typedef unsigned char byte;		// put in global namespace to avoid ambiguity with other byte typedefs
+// manually applying patch from https://github.com/weidai11/cryptopp/commit/00f9818b5d8e
+#define CRYPTOPP_NO_GLOBAL_BYTE 1
 
 NAMESPACE_BEGIN(CryptoPP)
 
+typedef unsigned char byte;
 typedef unsigned short word16;
 typedef unsigned int word32;
 
